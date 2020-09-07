@@ -359,6 +359,11 @@ module ActionView
           end
 
           content = layout.render(view, locals) { content } if layout
+
+          if @options[:indent]
+            content = ActionView::OutputBuffer.new content.gsub(/^(?!$)/, "  " * @options[:indent]).gsub(/\A#{"  " * @options[:indent]}/, '')
+          end
+
           payload[:cache_hit] = view.view_renderer.cache_hits[template.virtual_path]
           build_rendered_template(content, template, layout)
         end
